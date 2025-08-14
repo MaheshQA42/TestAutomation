@@ -1,5 +1,5 @@
 
-# Shopping Basket (Java + Selenium + JUnit 5)
+# Shopping Basket (Java + Selenium + )
 
 ## Items & Offers
 - Apple — **35p** each  
