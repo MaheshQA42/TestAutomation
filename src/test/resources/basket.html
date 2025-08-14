@@ -1,0 +1,66 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Basket Demo</title>
+  <style>
+    body { font-family: system-ui, Arial, sans-serif; max-width: 680px; margin: 2rem auto; }
+    .item { display: flex; align-items: center; gap: 8px; margin: 6px 0; }
+    .total { margin-top: 1rem; font-weight: bold; }
+    .note { color: #555; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <h1>Basket Demo</h1>
+  <p class="note">Promotions: Melon — BOGOF; Lime — 3 for 2</p>
+
+  <div id="items">
+    <label class="item"><input type="checkbox" value="Apple"> Apple (35p)</label>
+    <label class="item"><input type="checkbox" value="Apple"> Apple (35p)</label>
+    <label class="item"><input type="checkbox" value="Banana"> Banana (20p)</label>
+    <label class="item"><input type="checkbox" value="Melon"> Melon (50p)</label>
+    <label class="item"><input type="checkbox" value="Melon"> Melon (50p)</label>
+    <label class="item"><input type="checkbox" value="Lime"> Lime (15p)</label>
+    <label class="item"><input type="checkbox" value="Lime"> Lime (15p)</label>
+    <label class="item"><input type="checkbox" value="Lime"> Lime (15p)</label>
+  </div>
+
+  <button id="calc">Calculate</button>
+  <div id="total" class="total">Total: £0.00</div>
+
+  <script>
+    const prices = { Apple: 35, Banana: 20, Melon: 50, Lime: 15 };
+    function calcPence(items) {
+      const counts = {};
+      items.forEach(i => counts[i] = (counts[i] || 0) + 1);
+      let total = 0;
+      for (const [item, count] of Object.entries(counts)) {
+        const price = prices[item];
+        if (item === 'Melon') {
+          const payable = Math.floor(count / 2) + (count % 2);
+          total += payable * price;
+        } else if (item === 'Lime') {
+          const groups = Math.floor(count / 3);
+          const remainder = count % 3;
+          total += (groups * 2 * price) + (remainder * price);
+        } else {
+          total += count * price;
+        }
+      }
+      return total;
+    }
+    function fmt(pence) {
+      const pounds = Math.floor(pence / 100);
+      const pennies = (pence % 100).toString().padStart(2, '0');
+      return `£${pounds}.${pennies}`;
+    }
+    document.getElementById('calc').addEventListener('click', () => {
+      const checked = Array.from(document.querySelectorAll('#items input[type=checkbox]:checked'))
+        .map(cb => cb.value);
+      const total = calcPence(checked);
+      document.getElementById('total').textContent = 'Total: ' + fmt(total);
+    });
+  </script>
+</body>
+</html>
